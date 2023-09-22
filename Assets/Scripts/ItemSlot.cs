@@ -6,25 +6,13 @@ using UnityEngine.EventSystems;
 
 public class ItemSlot : MonoBehaviour, IDropHandler
 {
-    public class OnAnyItemDroppedArgs : EventArgs{
-        public ToyObject _toyObject;
-
-        public OnAnyItemDroppedArgs(ToyObject toyObject) {
-            _toyObject = toyObject;
-        }
-    }
-    
-    public event EventHandler<OnAnyItemDroppedArgs> OnAnyItemDropped;
-
     public void OnDrop(PointerEventData eventData)
     {
         if(transform.childCount == 0 ){
             GameObject dropped = eventData.pointerDrag;
             ToyObject dragableItem = dropped.GetComponent<ToyObject>();
-            dragableItem.SetParentTransform(this.transform);
-            
-            
-            OnAnyItemDropped?.Invoke(this, new OnAnyItemDroppedArgs (dragableItem));
+            dragableItem.SetParentTransform(this.transform);            
+            // Debug.Log(dragableItem.transform.parent);
         }
     }
 

@@ -34,15 +34,14 @@ public class ToyShelf : MonoBehaviour
                 foreach(SlotHolder slot in slotHolders) {
                         slot.PushNewToyOut();
                     }
-                return;
+                break;
             case SortingType.Match3:
                 foreach(SlotHolder slot in slotHolders) {
                     slot.ClearSortedToys();
-                    
                 }
-                return;
+                break;
             default:
-                return;
+                break;
         }
     
 }

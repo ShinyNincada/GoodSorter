@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class SlotHolder : MonoBehaviour
 {
-    [SerializeField] ToyShelf shelf;
+    public static event  EventHandler OnActiveItemChanged;
+    [SerializeField] public ToyShelf shelf;
     [SerializeField] Image backItem;
     [SerializeField] ItemSlot frontItem;
 
@@ -14,7 +15,6 @@ public class SlotHolder : MonoBehaviour
     [SerializeField] private ToyObject activeToy;
     
     private void Start() {
-        frontItem.OnAnyItemDropped +=  ItemSlot_OnAnyItemDropped;
         if(toyList.Count >= 2) {
             var newToy = SpawnNewToy(toyList[0]);
             SetActiveToy(newToy);
@@ -29,28 +29,27 @@ public class SlotHolder : MonoBehaviour
         }
     }
 
-
-
-    private void ToyObject_OnSlotHolderChanged(object sender, EventArgs e)
+    private void ToyObject_OnAnyItemDropped(object sender, ToyObject.OnAnyItemDroppedArgs e)
     {
-        ClearActiveToy();
-    }
-
-    private void ItemSlot_OnAnyItemDropped(object sender, ItemSlot.OnAnyItemDroppedArgs e)
-    {
+        if(e._toyObject.currentHolder == this) {
+            return;
+        }
         if(e._toyObject.currentHolder != this) {
             e._toyObject.currentHolder.ClearActiveToy();
             e._toyObject.currentHolder.RemoveFirstToy();
-            e._toyObject.currentHolder.shelf.TrySortingToy();
         }
+
         AddNewToy(e._toyObject);
         SetActiveToy(e._toyObject);
 
         shelf.TrySortingToy();
+
     }
 
     public void SetActiveToy(ToyObject newToy){
         activeToy = newToy;
+
+        OnActiveItemChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public ToyObject GetActiveToy(){

@@ -7,6 +7,16 @@ using UnityEngine.UI;
 
 public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public class OnAnyItemDroppedArgs : EventArgs{
+        public ToyObject _toyObject;
+
+        public OnAnyItemDroppedArgs(ToyObject toyObject) {
+            _toyObject = toyObject;
+        }
+    }
+    public static event EventHandler<OnAnyItemDroppedArgs> OnAnyItemDropped;
+
+    public SlotHolder lastHolder;
     public SlotHolder currentHolder;
     [SerializeField] private ToyObjectSO toySO; 
     [HideInInspector] Transform parentTransform;
@@ -14,7 +24,7 @@ public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentTransform = this.transform.parent;
-        currentHolder = parentTransform.GetComponentInParent<SlotHolder>();
+        lastHolder = parentTransform.GetComponentInParent<SlotHolder>();
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
@@ -42,6 +52,9 @@ public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         transform.SetParent(parentTransform);
         currentHolder = parentTransform.GetComponentInParent<SlotHolder>();
         image.raycastTarget = true;
+        
+        OnAnyItemDropped?.Invoke(this, new OnAnyItemDroppedArgs (this));
+
     }
 
     public void SetParentTransform(Transform newParent){
