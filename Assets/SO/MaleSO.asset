@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc3679ad2b1e2c47a1c428731939e32, type: 3}
+  m_Name: MaleSO
+  m_EditorClassIdentifier: 
+  toyName: Male
+  sprite: {fileID: 21300000, guid: dc4f8568c71c5c14a8afd2e24587a9e3, type: 3}
+  prefabs: {fileID: 8713071195000668416, guid: fd930da8c9326be488e02f4a1a249d3f, type: 3}
