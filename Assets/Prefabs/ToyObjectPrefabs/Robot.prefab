@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1651125926015210536
+--- !u!1001 &9034995347893854662
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9,16 +9,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3762968025512701712, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_Name
-      value: FemaleAdventure
+      value: Robot
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701805, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5d4dbff15aedb024cb159a8363680436, type: 3}
+      objectReference: {fileID: 21300000, guid: b2fc238d93f1e1b45a7cb963b2de83c5, type: 3}
     - target: {fileID: 3762968025512701806, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: toySO
       value: 
-      objectReference: {fileID: 11400000, guid: 44b33c3e168f2a64cb32196672ccec64, type: 2}
+      objectReference: {fileID: 11400000, guid: c5b6f6d437bc47d4f992c453ac84c2e6, type: 2}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -33,27 +33,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 3762968025512701807, guid: 154e4c7247df4b74eba74a0368e54c98, type: 3}
       propertyPath: m_LocalPosition.x
