@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SortingManager : MonoBehaviour
 {
-    public SortingManager Instance;
+    SortingManager Instance;
     
     private void Awake() {
         if(Instance == null) {
@@ -24,21 +24,39 @@ public class SortingManager : MonoBehaviour
 
     private void ToyObject_OnAnyItemDropped(object sender, ToyObject.OnAnyItemDroppedArgs e)
     {
-        // Debug.Log(e._toyObject.transform.parent.childCount);
         if(e._toyObject.currentHolder == e._toyObject.lastHolder) {
             return;
         }
-        if(e._toyObject.currentHolder != e._toyObject.lastHolder) {
-            e._toyObject.lastHolder.ClearActiveToy();
-            e._toyObject.lastHolder.RemoveFirstToy();
 
-            e._toyObject.lastHolder.shelf.TrySortingToy();
+        if( e._toyObject.currentHolder.GetToyShelf().GetActiveToyNumber() == 1) {
+            e._toyObject.currentHolder.AddNewToy(e._toyObject);
+            e._toyObject.currentHolder.SetActiveToy(e._toyObject);
+            e._toyObject.currentHolder.GetToyShelf().TrySortingToy();
+            
+            if(e._toyObject.currentHolder != e._toyObject.lastHolder) {
+                e._toyObject.lastHolder.ClearActiveToy();
+                e._toyObject.lastHolder.RemoveFirstToy();
+
+                e._toyObject.lastHolder.GetToyShelf().TrySortingToy();
+            }
         }
 
-        e._toyObject.currentHolder.AddNewToy(e._toyObject);
-        e._toyObject.currentHolder.SetActiveToy(e._toyObject);
+        else {
+            if(e._toyObject.currentHolder != e._toyObject.lastHolder) {
+                e._toyObject.lastHolder.ClearActiveToy();
+                e._toyObject.lastHolder.RemoveFirstToy();
 
-        e._toyObject.currentHolder.shelf.TrySortingToy();
+                e._toyObject.lastHolder.GetToyShelf().TrySortingToy();
+            }
+
+            e._toyObject.currentHolder.AddNewToy(e._toyObject);
+            e._toyObject.currentHolder.SetActiveToy(e._toyObject);
+            e._toyObject.currentHolder.GetToyShelf().TrySortingToy();
+        }
+
+
+       
+
     }
 
    

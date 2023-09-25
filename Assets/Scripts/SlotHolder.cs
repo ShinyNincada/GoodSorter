@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SlotHolder : MonoBehaviour
 {
     public static event  EventHandler OnActiveItemChanged;
-    [SerializeField] public ToyShelf shelf;
+    [SerializeField] ToyShelf shelf;
     [SerializeField] Image backItem;
     [SerializeField] ItemSlot frontItem;
 
@@ -16,8 +16,10 @@ public class SlotHolder : MonoBehaviour
     
     private void Start() {
         if(toyList.Count >= 2) {
-            var newToy = SpawnNewToy(toyList[0]);
-            SetActiveToy(newToy);
+            if(toyList[0] != null) {
+                var newToy = SpawnNewToy(toyList[0]);
+                SetActiveToy(newToy);
+            }
             backItem.sprite = toyList[1].GetToyObjectSO().sprite;
         }
         else if(toyList.Count == 1) {
@@ -76,13 +78,16 @@ public class SlotHolder : MonoBehaviour
     }
 
     public ToyObject SpawnNewToy(ToyObject newToyObject){
-        var newToy = Instantiate(toyList[0], frontItem.transform);
+        var newToy = Instantiate(newToyObject, frontItem.transform);
         newToy.SetParentTransform(frontItem.transform);
         return newToy;
     }
 
     public void PushNewToyOut(){
         if(toyList.Count > 0) {
+            if(toyList[0] == null) {
+                toyList.RemoveAt(0);
+            }
             var toySpawned = SpawnNewToy(toyList[0]);
             SetActiveToy(toySpawned);
         }
@@ -101,4 +106,7 @@ public class SlotHolder : MonoBehaviour
         PushNewToyOut();
     }
 
+    public ToyShelf GetToyShelf(){
+        return shelf;
+    }
 }

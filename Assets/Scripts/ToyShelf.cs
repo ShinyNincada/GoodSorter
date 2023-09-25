@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ToyShelf : MonoBehaviour
 {
-    public event EventHandler OnAnySortableToysExists;
+    public static event EventHandler OnAnyToyShorted;
     [SerializeField] List<SlotHolder> slotHolders = new List<SlotHolder>(3);
     public SortingType IsSortable(){
         if(!slotHolders[0].HasActiveToy() && !slotHolders[1].HasActiveToy() && !slotHolders[2].HasActiveToy())
@@ -39,12 +39,23 @@ public class ToyShelf : MonoBehaviour
                 foreach(SlotHolder slot in slotHolders) {
                     slot.ClearSortedToys();
                 }
+                OnAnyToyShorted?.Invoke(this, EventArgs.Empty);
                 break;
             default:
                 break;
         }
-    
-}
+    }
+
+    public int GetActiveToyNumber(){
+        int count = 0;
+        foreach(SlotHolder slot in slotHolders) {
+            if(slot.HasActiveToy()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
 }
 

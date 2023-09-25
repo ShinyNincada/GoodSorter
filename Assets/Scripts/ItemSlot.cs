@@ -12,7 +12,6 @@ public class ItemSlot : MonoBehaviour, IDropHandler
             GameObject dropped = eventData.pointerDrag;
             ToyObject dragableItem = dropped.GetComponent<ToyObject>();
             dragableItem.SetParentTransform(this.transform);            
-            // Debug.Log(dragableItem.transform.parent);
         }
     }
 
