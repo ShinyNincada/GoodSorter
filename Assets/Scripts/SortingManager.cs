@@ -52,7 +52,7 @@ public class SortingManager : MonoBehaviour
 
             e._toyObject.currentHolder.AddNewToy(e._toyObject);
             e._toyObject.currentHolder.SetActiveToy(e._toyObject);
-            e._toyObject.currentHolder.GetToyShelf().TrySortingToy();
+            e._toyObject.currentHolder.GetToyShelf().TrySortingToy();   
         }
 
 
