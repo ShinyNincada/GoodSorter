@@ -12,6 +12,7 @@ public class ComboTextUI : MonoBehaviour
     [SerializeField] TMP_Text text;
     public Image _fillImage;
     int count = 0;
+    
    private void Start() {
         ToyShelf.OnAnyToyShorted += ToyShelf_OnAnyToyShorted;
    }
@@ -25,15 +26,16 @@ public class ComboTextUI : MonoBehaviour
 
     private void ToyShelf_OnAnyToyShorted(object sender, EventArgs e)
     {
-        
         if(comboTimer > 0) {
             count++;
+            GameManager.Instance.GetStars(3 * count);
         }
         else{
             count = 1;
+            GameManager.Instance.GetStars(3);
         }
         
         comboTimer = comboTimerMax;
-        text.text = count.ToString();
+        text.text = $"Combo: {count}";
     }
 }

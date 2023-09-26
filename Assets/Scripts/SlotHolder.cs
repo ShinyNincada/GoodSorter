@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -102,11 +103,16 @@ public class SlotHolder : MonoBehaviour
     public void ClearSortedToys(){
         ClearActiveToy();
         RemoveFirstToy();
-        frontItem.DestroyItem();
-        PushNewToyOut();
+        frontItem.transform.DOScale(1.3f, 1.5f).OnComplete(() =>  {
+            frontItem.DestroyItem();
+            PushNewToyOut();
+            frontItem.transform.localScale = Vector3.one;
+        }
+        );
     }
 
     public ToyShelf GetToyShelf(){
         return shelf;
     }
+
 }
