@@ -28,7 +28,6 @@ public class ComboTextUI : MonoBehaviour
         
         if(comboTimer > 0) {
             count++;
-            Debug.Log("Combooo");
         }
         else{
             count = 1;
