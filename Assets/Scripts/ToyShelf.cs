@@ -8,20 +8,49 @@ public class ToyShelf : MonoBehaviour
 {
     public static event EventHandler OnAnyToyShorted;
     [SerializeField] List<SlotHolder> slotHolders = new List<SlotHolder>(3);
+    [SerializeField] bool sortable;
+
     public SortingType IsSortable(){
-        if(!slotHolders[0].HasActiveToy() && !slotHolders[1].HasActiveToy() && !slotHolders[2].HasActiveToy())
-        {
-            return SortingType.BoxClear;
-        }
-        
-        if(!slotHolders[0].HasActiveToy() || !slotHolders[1].HasActiveToy() || !slotHolders[2].HasActiveToy()) {
-            return SortingType.NONE;
+        int count = 0;
+        int sameCount = 0;
+        ToyObjectSO currentToy = null;
+        foreach(SlotHolder slot in slotHolders){
+            if(!slot.HasActiveToy()) {
+                // If have no active toy
+                if(currentToy != null) {
+                    // if checked a toy in the shelf before
+                    return SortingType.NONE;
+                }
+                else {
+                    count++;
+                }
+            }
+            else {
+                // If slot has an active toy
+                if(currentToy == null) {
+                    //If current toy is null
+                    currentToy = slot.GetActiveToy().GetToyObjectSO();
+                    sameCount++;
+                }
+                else{
+                    // If the current toy is not null
+                    if(currentToy != slot.GetActiveToy().GetToyObjectSO()) {
+                        return SortingType.NONE;
+                    }
+                    else{
+                        sameCount++;
+                    }
+                }
+            }
         }
 
-        if((slotHolders[0].GetActiveToy().GetToyObjectSO() == slotHolders[1].GetActiveToy().GetToyObjectSO()
-        && slotHolders[1].GetActiveToy().GetToyObjectSO() == slotHolders[2].GetActiveToy().GetToyObjectSO()))
+        if(count == slotHolders.Count){
+            return SortingType.BoxClear;
+        }
+
+        if(sameCount == slotHolders.Count){
             return SortingType.Match3;
-        
+        }
         else {
             return SortingType.NONE;
         }
@@ -37,10 +66,12 @@ public class ToyShelf : MonoBehaviour
                     }
                 break;
             case SortingType.Match3:
-                foreach(SlotHolder slot in slotHolders) {
+                if(sortable){
+                    foreach(SlotHolder slot in slotHolders) {
                     slot.ClearSortedToys();
+                    }
+                    OnAnyToyShorted?.Invoke(this, EventArgs.Empty);
                 }
-                OnAnyToyShorted?.Invoke(this, EventArgs.Empty);
                 break;
             default:
                 break;

@@ -32,22 +32,6 @@ public class SlotHolder : MonoBehaviour
         }
     }
 
-    private void ToyObject_OnAnyItemDropped(object sender, ToyObject.OnAnyItemDroppedArgs e)
-    {
-        if(e._toyObject.currentHolder == this) {
-            return;
-        }
-        if(e._toyObject.currentHolder != this) {
-            e._toyObject.currentHolder.ClearActiveToy();
-            e._toyObject.currentHolder.RemoveFirstToy();
-        }
-
-        AddNewToy(e._toyObject);
-        SetActiveToy(e._toyObject);
-
-        shelf.TrySortingToy();
-
-    }
 
     public void SetActiveToy(ToyObject newToy){
         activeToy = newToy;
@@ -103,7 +87,7 @@ public class SlotHolder : MonoBehaviour
     public void ClearSortedToys(){
         ClearActiveToy();
         RemoveFirstToy();
-        frontItem.transform.DOScale(1.3f, 1.5f).OnComplete(() =>  {
+        frontItem.transform.DOScale(1.3f, 1f).OnComplete(() =>  {
             frontItem.DestroyItem();
             PushNewToyOut();
             frontItem.transform.localScale = Vector3.one;

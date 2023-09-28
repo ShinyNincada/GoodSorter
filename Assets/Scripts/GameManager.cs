@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public event EventHandler OnGameStateChanged;
     public static GameManager Instance;
     public float playTimer;
     public int starCount = 0;
+    GameState state;
     private void Awake() {
         if(Instance == null) {
             Instance = this;
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
         }
         else if (playTimer < 0) {
             playTimer = 0;
+            
         }
         
     }
@@ -55,4 +58,9 @@ public class GameManager : MonoBehaviour
     public int GetStarCount(){
         return starCount;
     }
+}
+
+public enum GameState {
+    GameOver,
+    Playing
 }
