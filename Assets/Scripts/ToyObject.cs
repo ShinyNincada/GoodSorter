@@ -7,20 +7,15 @@ using UnityEngine.UI;
 
 public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public class OnAnyItemDroppedArgs : EventArgs{
-        public ToyObject _toyObject;
+   
 
-        public OnAnyItemDroppedArgs(ToyObject toyObject) {
-            _toyObject = toyObject;
-        }
-    }
-    public static event EventHandler<OnAnyItemDroppedArgs> OnAnyItemDropped;
-
-    public SlotHolder lastHolder;
-    public SlotHolder currentHolder;
+    public BaseSlot lastHolder;
+    public BaseSlot currentHolder;
     [SerializeField] private ToyObjectSO toySO; 
     [HideInInspector] Transform parentTransform;
     public Image image;
+
+ 
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentTransform = this.transform.parent;
@@ -52,9 +47,26 @@ public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         transform.SetParent(parentTransform);
         currentHolder = parentTransform.GetComponentInParent<SlotHolder>();
         image.raycastTarget = true;
-        
-        OnAnyItemDropped?.Invoke(this, new OnAnyItemDroppedArgs (this));
 
+        if (currentHolder == lastHolder)
+        {
+            //If both new and old holder is the same, do nothing
+            return;
+        }
+
+        // Add the toy dropped to the newSlot first to prevent the case that shelf have no item
+        lastHolder.SetActiveToyObject(null);
+        lastHolder.RemoveFirstToyFromList();
+        currentHolder.AddNewToy(this);
+        currentHolder.SetActiveToyObject(this);
+
+        // If we moving to different shelf so try to sort
+        // Dont need to sort if moving in the same shelf
+        if (currentHolder.GetToyShelf() != lastHolder.GetToyShelf())
+        {
+            SortingManager.Instance.TrySortingToy(currentHolder.GetToyShelf());
+            SortingManager.Instance.TrySortingToy(lastHolder.GetToyShelf());
+        }
     }
 
     public void SetParentTransform(Transform newParent){

@@ -6,10 +6,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public event EventHandler OnGameStateChanged;
+    public event EventHandler OnStarCountChanged;
     public static GameManager Instance;
     public float playTimer;
     public int starCount = 0;
-    GameState state;
+    [SerializeField] GameState state;
+
+
     private void Awake() {
         if(Instance == null) {
             Instance = this;
@@ -17,14 +20,9 @@ public class GameManager : MonoBehaviour
         else {
             
         }
+        SetState(GameState.Playing);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
- 
 
     // Update is called once per frame
     void Update()
@@ -38,11 +36,21 @@ public class GameManager : MonoBehaviour
         if(playTimer > 0) {
             playTimer -= Time.deltaTime;
         }
-        else if (playTimer < 0) {
+        else if (playTimer <= 0) {
+            SetState(GameState.GameOver);
             playTimer = 0;
-            
         }
-        
+    }
+
+    public void SetState(GameState newState)
+    {
+        state = newState;
+        OnGameStateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public GameState GetState()
+    {
+        return state;
     }
 
     public string GetTimerText(){
@@ -51,8 +59,10 @@ public class GameManager : MonoBehaviour
         return $"{minutes}:{seconds}";
     }
 
-    public void GetStars(int amount) {
+    public void AddStar(int amount) {  
         starCount += amount;
+        
+        OnStarCountChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public int GetStarCount(){
@@ -62,5 +72,6 @@ public class GameManager : MonoBehaviour
 
 public enum GameState {
     GameOver,
-    Playing
+    Playing,
+    Pause
 }

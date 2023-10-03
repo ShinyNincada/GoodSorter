@@ -4,17 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class ComboTextUI : MonoBehaviour
 {
+    [SerializeField] private GameObject ComboTextPrefab;
+    [SerializeField] TMP_Text comboText;
+
     float comboTimer;
     float comboTimerMax = 10;
-    [SerializeField] TMP_Text text;
     public Image _fillImage;
     int count = 0;
     
    private void Start() {
-        ToyShelf.OnAnyToyShorted += ToyShelf_OnAnyToyShorted;
+        SortingManager.OnAnyToySorted += SortingManager_OnAnyToyShorted;
    }
 
     private void Update() {
@@ -24,18 +27,55 @@ public class ComboTextUI : MonoBehaviour
     }
 
 
-    private void ToyShelf_OnAnyToyShorted(object sender, EventArgs e)
+    private void SortingManager_OnAnyToyShorted(object sender, SortingManager.OnAnyToySortedArgs e)
     {
-        if(comboTimer > 0) {
+        if (comboTimer > 0) {
             count++;
-            GameManager.Instance.GetStars(3 * count);
         }
-        else{
+        else {
             count = 1;
-            GameManager.Instance.GetStars(3);
         }
-        
+
         comboTimer = comboTimerMax;
-        text.text = $"Combo: {count}";
+        comboText.transform.DOScale(1.3f, 1f).SetEase(Ease.OutElastic)
+            .OnComplete(() => { comboText.transform.localScale = Vector3.one; 
+        });;
+
+        SpawnComboText(e.sortedTransform, count);
+        comboText.text = $"Combo: {count}";
     }
+
+    public void SpawnComboText(Transform shelfTransform, int combo)
+    {
+        var spawnedText = Instantiate(ComboTextPrefab, shelfTransform);
+        COMBO value;
+        if (combo < 5)
+        {
+           value  = (COMBO)Enum.GetValues(typeof(COMBO)).GetValue(combo);
+        }
+        else
+        {
+            value = COMBO.COMBO;
+        }
+
+        spawnedText.GetComponent<TMP_Text>().text = value.ToString();
+        spawnedText.transform.DOScale(1.3f, 0.5f).SetEase(Ease.OutElastic)
+            .OnComplete(() => { Destroy(spawnedText.gameObject); });
+
+    }
+
+    private void OnDestroy()
+    {
+        SortingManager.OnAnyToySorted -= SortingManager_OnAnyToyShorted;
+    }
+}
+
+
+public enum COMBO
+{
+    COOL = 1,
+    GREAT,
+    EXCELLENT,
+    PERFECT,
+    COMBO
 }
