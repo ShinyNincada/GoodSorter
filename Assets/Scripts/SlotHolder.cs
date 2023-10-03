@@ -2,65 +2,39 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SlotHolder : MonoBehaviour
+public class SlotHolder : BaseSlot
 {
-    public static event  EventHandler OnActiveItemChanged;
-    [SerializeField] ToyShelf shelf;
-    [SerializeField] Image backItem;
-    [SerializeField] ItemSlot frontItem;
-
-    [SerializeField] List<ToyObject> toyList = new List<ToyObject>();
-    [SerializeField] private ToyObject activeToy;
-    
-    private void Start() {
-        if(toyList.Count >= 2) {
-            if(toyList[0] != null) {
-                var newToy = SpawnNewToy(toyList[0]);
-                SetActiveToy(newToy);
+    private void Start()
+    {
+        if (GetToyList().Count >= 2)
+        {
+            if (GetFirstToy() != null)
+            {
+                var newToy = SpawnNewToy(GetFirstToy());
+                SetActiveToyObject(newToy);
             }
-            backItem.sprite = toyList[1].GetToyObjectSO().sprite;
+            SetBackupToy(GetSecondToy().GetToyObjectSO());
         }
-        else if(toyList.Count == 1) {
-            var newToy = SpawnNewToy(toyList[0]);
-            SetActiveToy(newToy);
+        else if (GetToyList().Count == 1)
+        {
+            if (GetFirstToy() != null)
+            {
+                var newToy = SpawnNewToy(GetFirstToy());
+                SetActiveToyObject(newToy);
+            }
         }
-        else {
+        else
+        {
             return;
         }
     }
 
-
-    public void SetActiveToy(ToyObject newToy){
-        activeToy = newToy;
-
-        OnActiveItemChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    public ToyObject GetActiveToy(){
-        return activeToy;
-    }
-
-    public bool HasActiveToy(){
-        return activeToy != null;
-    }
-    public void ClearActiveToy(){
-        activeToy = null;
-    }
-
-    public void AddNewToy(ToyObject newToy) {
-        toyList.Insert(0, newToy);
-    }
-
-    public void RemoveFirstToy(){
-        toyList.RemoveAt(0);
-    }
-
-    public List<ToyObject> GetToyList(){
-        return toyList;
-    }
 
     public ToyObject SpawnNewToy(ToyObject newToyObject){
         var newToy = Instantiate(newToyObject, frontItem.transform);
@@ -69,15 +43,16 @@ public class SlotHolder : MonoBehaviour
     }
 
     public void PushNewToyOut(){
-        if(toyList.Count > 0) {
-            if(toyList[0] == null) {
-                toyList.RemoveAt(0);
+        if(GetToyList().Count > 0) {
+            if(GetFirstToy() == null) {
+                RemoveFirstToyFromList();
             }
-            var toySpawned = SpawnNewToy(toyList[0]);
-            SetActiveToy(toySpawned);
+            var toySpawned = SpawnNewToy(GetFirstToy());
+            SortingManager.Instance.waitingToyLists.Remove(GetFirstToy().GetToyObjectSO());
+            SetActiveToyObject(toySpawned);
         }
-        if(toyList.Count >= 2) {
-            backItem.sprite = toyList[1].GetToyObjectSO().sprite;
+        if(GetToyList().Count >= 2) {
+            SetBackupToy(GetSecondToy().GetToyObjectSO());
         }
         else {
             backItem.sprite = null;
@@ -85,18 +60,37 @@ public class SlotHolder : MonoBehaviour
     }
 
     public void ClearSortedToys(){
-        ClearActiveToy();
-        RemoveFirstToy();
+        SetActiveToyObject(null);
+        RemoveFirstToyFromList();
         frontItem.transform.DOScale(1.3f, 1f).OnComplete(() =>  {
-            frontItem.DestroyItem();
+            DestroyItem();
             PushNewToyOut();
             frontItem.transform.localScale = Vector3.one;
         }
         );
     }
 
-    public ToyShelf GetToyShelf(){
-        return shelf;
+    public void ClearPickupToy()
+    {
+        SetActiveToyObject(null);
+        RemoveFirstToyFromList();
+        frontItem.transform.DOScale(1.3f, 1f).OnComplete(() => {
+            DestroyItem();    
+            frontItem.transform.localScale = Vector3.one;
+            //GetToyShelf().TrySortingToy();
+        }
+        );
     }
 
+    public void SetBackupToy(ToyObjectSO objectSO)
+    {
+        if(objectSO != null)
+        {
+            backItem.sprite = objectSO.sprite;
+            SortingManager.Instance.waitingToyLists.Add(objectSO);
+        }
+        
+    }
+
+    
 }
