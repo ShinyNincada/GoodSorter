@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Random = UnityEngine.Random;
-using TMPro;
-using System.Linq;
-using Unity.Mathematics;
-using static ToyShelf;
+using UnityEditor;
 
 public class SortingManager : MonoBehaviour
 {
@@ -170,6 +167,7 @@ public class SortingManager : MonoBehaviour
                     SlotHolder slot = item.transform.parent.parent.GetComponent<SlotHolder>();
                     slot.ClearPickupToy();
                 }
+                 OnAnyToySorted?.Invoke(this, new OnAnyToySortedArgs(this.transform));
 
             }
             
@@ -256,14 +254,17 @@ public class SortingManager : MonoBehaviour
         switch (IsSortable(shelf))
         {
             case SortingType.NONE:
+                //Debug.Log(shelf.gameObject.name + ": None");
                 break;
             case SortingType.BoxClear:
+                //Debug.Log(shelf.gameObject.name + ": Clear");
                 foreach (SlotHolder slot in shelf.GetSlotList())
                 {
                     slot.PushNewToyOut();
                 }
                 break;
             case SortingType.Match3:
+                //Debug.Log(shelf.gameObject.name + ": Match3");
                 if (shelf.canSort && shelf.GetActiveToyNumber() == 3)
                 {
                     foreach (SlotHolder slot in shelf.GetSlotList())
@@ -271,7 +272,7 @@ public class SortingManager : MonoBehaviour
                         slot.ClearSortedToys();
                     }
                     
-                    OnAnyToySorted?.Invoke(this, new OnAnyToySortedArgs(this.transform));
+                    OnAnyToySorted?.Invoke(this, new OnAnyToySortedArgs(shelf.transform));
                 }
                 break;
             default:

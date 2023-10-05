@@ -59,7 +59,6 @@ public class BaseSlot : MonoBehaviour, IToyObjectParent, IHasToyObjectList, IDro
 
     public void SetActiveToyObject(ToyObject obj)
     {
-        Debug.Log(obj);
         ToyObject old = activeToy;
         activeToy = obj;
 
@@ -84,6 +83,7 @@ public class BaseSlot : MonoBehaviour, IToyObjectParent, IHasToyObjectList, IDro
         } 
     }
 
+   
 
     public void AddNewToy(ToyObject newToy)
     {
@@ -126,8 +126,10 @@ public class BaseSlot : MonoBehaviour, IToyObjectParent, IHasToyObjectList, IDro
     {
         foreach (Transform child in frontItem)
         {
+            //debug.log("destroyed: " + child.gameobject);
             Destroy(child.gameObject);
         }
+
     }
 
     public ToyShelf GetToyShelf()
