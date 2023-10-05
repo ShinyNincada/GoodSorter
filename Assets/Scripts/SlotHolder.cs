@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
@@ -38,6 +39,7 @@ public class SlotHolder : BaseSlot
 
     public ToyObject SpawnNewToy(ToyObject newToyObject){
         var newToy = Instantiate(newToyObject, frontItem.transform);
+        Debug.Log("Spawned: " + newToy);
         newToy.SetParentTransform(frontItem.transform);
         return newToy;
     }
@@ -74,10 +76,11 @@ public class SlotHolder : BaseSlot
     {
         SetActiveToyObject(null);
         RemoveFirstToyFromList();
-        frontItem.transform.DOScale(1.3f, 1f).OnComplete(() => {
-            DestroyItem();    
+        frontItem.transform.DOScale(1.3f, 1f).OnComplete( async () => {
+            DestroyItem();
             frontItem.transform.localScale = Vector3.one;
-            //GetToyShelf().TrySortingToy();
+            await Task.Delay( 100 );
+            SortingManager.Instance.TrySortingToy(GetToyShelf());
         }
         );
     }

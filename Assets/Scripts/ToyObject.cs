@@ -12,20 +12,24 @@ public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public BaseSlot lastHolder;
     public BaseSlot currentHolder;
     [SerializeField] private ToyObjectSO toySO; 
-    [HideInInspector] Transform parentTransform;
+    protected Transform parentTransform;
     public Image image;
+    [SerializeField] Collider _collider;
 
- 
-    public void OnBeginDrag(PointerEventData eventData)
+
+
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         parentTransform = this.transform.parent;
         lastHolder = parentTransform.GetComponentInParent<SlotHolder>();
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
+
+        //Camera.main.ScreenPointToRay(Input.mousePosition);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         Vector3 mousePosition = Input.mousePosition;
         // Set the z component to the distance between the object and the camera
@@ -42,7 +46,7 @@ public class ToyObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
         transform.SetParent(parentTransform);
         currentHolder = parentTransform.GetComponentInParent<SlotHolder>();
